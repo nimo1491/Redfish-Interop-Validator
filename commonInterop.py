@@ -360,8 +360,19 @@ def validatePropertyRequirement(propResourceObj, entry, decodedtuple, itemname, 
             msg.name = itemname + '.' + msg.name
         if "PropertyRequirements" in entry:
             innerDict = entry["PropertyRequirements"]
+            skipCelsiusCheck = False
             if isinstance(decodeditem, dict):
+                isSensorTypeTemp = False
+                for k,v in decodeditem.items():
+                    if k == '@odata.id':
+                        isSensorTypeTemp = True if v.find('Temperatures') >= 0 else False
+                    if k == 'Status' and isSensorTypeTemp == True:
+                        skipCelsiusCheck = True if v['State'] == 'Absent' else False
                 for item in innerDict:
+                    if skipCelsiusCheck == True and item == 'ReadingCelsius':
+                        rsvLogger.info('Skip checking ' + item + ' in disabled temperature sensor')
+                        skipCelsiusCheck = False
+                        continue
                     rsvLogger.info('inside complex ' + itemname + '.' + item)
                     complexMsgs, complexCounts = validatePropertyRequirement(
                         propResourceObj, innerDict[item], (decodeditem.get(item, 'DNE'), decodedtuple), item)
