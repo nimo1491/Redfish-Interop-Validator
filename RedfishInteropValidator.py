@@ -255,6 +255,9 @@ def validateURITree(URI, uriName, profile, expectedType=None, expectedSchema=Non
                     refLinks.append((linkName, link, parent))
                     continue
 
+                if linkURI == '/redfish/v1/Managers/Self/EthernetInterfaces/usb0':
+                    continue;
+
                 if autoExpand and linkType is not None:
                     linkSuccess, linkCounts, linkResults, innerLinks, linkobj = \
                         validateSingleURI(linkURI, profile, linkURI, linkType, linkSchema, innerJson, parent=parent)
