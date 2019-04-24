@@ -1,0 +1,6 @@
+SchemaFiles/
+configs/
+logs/
+myvenv/
+profiles/
+__pycache__/
